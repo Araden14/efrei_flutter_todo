@@ -6,7 +6,7 @@ class TodoService {
   final todoRepository = TodoRepository();
 
   // Add a new todo
-  Future<String> addTodo(TodoModel todo) async {
+  Future<String> addNew(TodoModel todo) async {
     try {
       final String newTodoId = await todoRepository.addTodo(todo);
       return newTodoId;
@@ -26,17 +26,17 @@ class TodoService {
     }
   }
 
-  // Update a todo (e.g., toggle completed)
-  Future<void> updateTodo(String id, Map<String, dynamic> updates) async {
-    try {
-      return todoRepository.updateTodo(id, updates);
-    } catch ($e) {
-      //popup erreur $e
-    }
-  }
-
   // Delete a todo
   Future<void> deleteTodo(String id) async {
     todoRepository.deleteTodo(id);
+  }
+
+  Future<void> updateStatus(String id, String status) async {
+    try {
+      final Map<String, dynamic> statusUpdate = {'status': status};
+      return todoRepository.updateTodo(id, statusUpdate);
+    } catch ($e) {
+      //popup erreur $e
+    }
   }
 }
