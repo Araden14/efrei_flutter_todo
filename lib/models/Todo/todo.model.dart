@@ -3,14 +3,42 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'todo.model.g.dart';
 
+// Custom converters for DateTime <-> Timestamp
+DateTime _dateTimeFromTimestamp(Timestamp timestamp) => timestamp.toDate();
+Timestamp _timestampFromDateTime(DateTime dateTime) => Timestamp.fromDate(dateTime);
+DateTime? _dateTimeFromTimestampNullable(Timestamp? timestamp) => timestamp?.toDate();
+Timestamp? _timestampFromDateTimeNullable(DateTime? dateTime) => dateTime != null ? Timestamp.fromDate(dateTime) : null;
+
 @JsonSerializable()
 class TodoModel {
   final String id;
   final String title;
-  final String description;
-  final bool done;
+  @JsonKey(includeIfNull: false)
+  final String? description;
+  @JsonKey(includeIfNull: false)
+  final String? userId;
+  @JsonKey(fromJson: _dateTimeFromTimestampNullable, toJson: _timestampFromDateTimeNullable, includeIfNull: false)
+  final DateTime? dueDate;
+  @JsonKey(defaultValue: 'normal')
+  final String priority;  // 'high' | 'normal' | 'low'
+  @JsonKey(fromJson: _dateTimeFromTimestamp, toJson: _timestampFromDateTime)
+  final DateTime createdAt;
+  @JsonKey(defaultValue: 'pending')
+  final String status;  // 'done' | 'in progress' | 'pending' | 'cancelled'
+  @JsonKey(defaultValue: <String>[])
+  final List<String> tags;
 
-  TodoModel({required this.id, required this.title, required this.description, required this.done});
+  TodoModel({
+    required this.id,
+    required this.title,
+    this.description,
+    this.userId,
+    this.dueDate,
+    this.priority = 'normal',
+    required this.createdAt,
+    this.status = 'pending',
+    List<String>? tags,
+  }) : tags = tags ?? <String>[];
 
   // Convert Firestore doc → Dart model
   factory TodoModel.fromFirestore(DocumentSnapshot doc) {
