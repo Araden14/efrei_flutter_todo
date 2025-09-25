@@ -45,20 +45,27 @@ class _HomePageState extends State<HomePage> {
         }
         List<String> tags = <String>[];
         if (_tagsController.text.isNotEmpty) {
-          tags = _tagsController.text.split(',').map((tag) => tag.trim()).where((tag) => tag.isNotEmpty).toList();
+          tags = _tagsController.text
+              .split(',')
+              .map((tag) => tag.trim())
+              .where((tag) => tag.isNotEmpty)
+              .toList();
         }
         final newTodo = TodoModel(
-          id: '',  // Auto-generate
+          id: '', // Auto-generate
           title: _todocontroller.text,
-          description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-          userId: null,  // Set based on auth if available
+          description: _descriptionController.text.isNotEmpty
+              ? _descriptionController.text
+              : null,
+          userId: null, // Set based on auth if available
           dueDate: dueDate,
           priority: _selectedPriority,
-          createdAt: DateTime.now(),  // Will be overridden by serverTimestamp in service
+          createdAt:
+              DateTime.now(), // Will be overridden by serverTimestamp in service
           status: 'pending',
           tags: tags,
         );
-        await _todoService.addTodo(newTodo);
+        await _todoService.addNew(newTodo);
         _todocontroller.clear();
         _datecontroller.clear();
         _descriptionController.clear();
@@ -67,9 +74,9 @@ class _HomePageState extends State<HomePage> {
       } catch (e) {
         developer.log('Error adding todo: $e');
         if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Error: $e')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('Error: $e')));
         }
       }
     }
@@ -135,7 +142,9 @@ class _HomePageState extends State<HomePage> {
                   lastDate: DateTime(2101),
                 );
                 if (pickedDate != null) {
-                  _datecontroller.text = "${pickedDate.toLocal()}".split(' ')[0];  // Format: YYYY-MM-DD
+                  _datecontroller.text = "${pickedDate.toLocal()}".split(
+                    ' ',
+                  )[0]; // Format: YYYY-MM-DD
                 }
               },
             ),
@@ -190,17 +199,24 @@ class _HomePageState extends State<HomePage> {
                         subtitle: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            if (todo.description != null) Text(todo.description!),
-                            if (todo.dueDate != null) Text('Due: ${todo.dueDate!.toLocal().toString().split(' ')[0]}'),
-                            Text('Priority: ${todo.priority} | Status: ${todo.status}'),
-                            if (todo.tags.isNotEmpty) Text('Tags: ${todo.tags.join(', ')}'),
+                            if (todo.description != null)
+                              Text(todo.description!),
+                            if (todo.dueDate != null)
+                              Text(
+                                'Due: ${todo.dueDate!.toLocal().toString().split(' ')[0]}',
+                              ),
+                            Text(
+                              'Priority: ${todo.priority} | Status: ${todo.status}',
+                            ),
+                            if (todo.tags.isNotEmpty)
+                              Text('Tags: ${todo.tags.join(', ')}'),
                           ],
                         ),
                         trailing: Checkbox(
                           value: todo.status == 'done',
                           onChanged: (value) async {
                             final newStatus = value! ? 'done' : 'pending';
-                            await _todoService.updateTodo(todo.id, {'status': newStatus});
+                            await _todoService.updateStatus(todo.id, newStatus);
                           },
                         ),
                       );
