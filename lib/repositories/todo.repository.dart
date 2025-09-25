@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_todo/models/Todo/todo.model.dart';
+import 'dart:developer' as developer;
 
 class TodoRepository {
   final CollectionReference _todosCollection = FirebaseFirestore.instance
@@ -8,10 +9,16 @@ class TodoRepository {
 
   Future<String> addTodo(TodoModel todo) async {
     try {
+      if (todo.id == null || todo.id!.isEmpty) {
+        throw ArgumentError('Todo ID must be provided (UUID from client)');
+      }
       final String uid = FirebaseAuth.instance.currentUser!.uid;
-      final ref = await _todosCollection.add({...todo.toJson(), 'userid': uid});
-      return ref.id; // Return the generated ID
+      final data = todo.toJson();
+      data['userId'] = uid;  // Ensure userId is set for queries/rules
+      await _todosCollection.doc(todo.id!).set(data);  // Use custom ID with .set()
+      return todo.id!;  // Return the client-generated ID directly
     } catch (e) {
+      developer.log('Error adding todo: $e');
       throw Exception('Failed to add todo: $e');
     }
   }
@@ -24,6 +31,9 @@ class TodoRepository {
           .where(FieldPath.documentId, isEqualTo: id)
           .limit(1)
           .get();
+      if (query.docs.isEmpty) {
+        throw Exception('Todo not found');
+      }
       return TodoModel.fromFirestore(query.docs.first);
     } catch (e) {
       throw Exception('Failed to get todo: $e');
@@ -52,7 +62,7 @@ class TodoRepository {
 
   Future<void> deleteTodo(String id) async {
     try {
-      FirebaseAuth.instance.currentUser!.uid;
+      final uid = FirebaseAuth.instance.currentUser!.uid;  // Use for potential rules check
       await _todosCollection.doc(id).delete();
     } catch (e) {
       throw Exception('Failed to delete todo: $e');

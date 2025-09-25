@@ -1,12 +1,16 @@
-import 'package:flutter_todo/repositories/Todo/todo.repository.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_todo/repositories/todo.repository.dart';
 import '../../models/Todo/todo.model.dart';
+import 'dart:developer' as developer;
 
 class TodoService {
   final todoRepository = TodoRepository();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Add a new todo
   Future<String> addNew(TodoModel todo) async {
     try {
+      developer.log(todo.id.toString());
       final String newTodoId = await todoRepository.addTodo(todo);
       return newTodoId;
     } catch (e) {
@@ -55,8 +59,10 @@ class TodoService {
         title: todoToUpdate.title,
         description: todoToUpdate.description,
         status: "done",
+        userId: _auth.currentUser?.uid ?? '',
+        createdAt: todoToUpdate.createdAt,
       );
-      await todoRepository.updateTodo(updatedTodo);
+      await todoRepository.updateTodo(updatedTodo.toString(), {'status': 'done'});
     } catch (e) {
       print("Issue changing the todo item's status");
     }

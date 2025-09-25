@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../services/todo_service.dart';
 import '../models/Todo/todo.model.dart';
 import 'dart:developer' as developer;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -11,6 +13,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final TodoService _todoService = TodoService();
   late TextEditingController _todocontroller;
   late TextEditingController _datecontroller;
@@ -52,12 +55,12 @@ class _HomePageState extends State<HomePage> {
               .toList();
         }
         final newTodo = TodoModel(
-          id: '', // Auto-generate
+          id: const Uuid().v4(),
           title: _todocontroller.text,
           description: _descriptionController.text.isNotEmpty
               ? _descriptionController.text
               : null,
-          userId: null, // Set based on auth if available
+          userId: _auth.currentUser?.uid ?? '',
           dueDate: dueDate,
           priority: _selectedPriority,
           createdAt:
