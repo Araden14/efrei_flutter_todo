@@ -40,6 +40,7 @@ class DefaultFirebaseOptions {
     }
   }
 
+  //todo: use .env
   static const FirebaseOptions web = FirebaseOptions(
     apiKey: 'AIzaSyBcBj-voJhf_0jBGTsQ6kgIHOvP14MS3lM',
     appId: '1:143554999350:web:9af3bef7ea2667fc0fd497',
