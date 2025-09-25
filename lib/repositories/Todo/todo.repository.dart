@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_todo/models/Todo/todo.model.dart';
 
 class TodoRepository {
@@ -7,7 +8,8 @@ class TodoRepository {
 
   Future<String> addTodo(TodoModel todo) async {
     try {
-      final ref = await _todosCollection.add(todo.toJson());
+      final String uid = FirebaseAuth.instance.currentUser!.uid;
+      final ref = await _todosCollection.add({...todo.toJson(), 'userid': uid});
       return ref.id; // Return the generated ID
     } catch (e) {
       throw Exception('Failed to add todo: $e');
@@ -16,17 +18,22 @@ class TodoRepository {
 
   Future<TodoModel> getTodo(String id) async {
     try {
-      final doc = await _todosCollection.doc(id).get();
-      return TodoModel.fromFirestore(doc);
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final query = await _todosCollection
+          .where('userId', isEqualTo: uid)
+          .where(FieldPath.documentId, isEqualTo: id)
+          .limit(1)
+          .get();
+      return TodoModel.fromFirestore(query.docs.first);
     } catch (e) {
       throw Exception('Failed to get todo: $e');
     }
   }
 
-  //todo: changer en getUserTodos
   Stream<List<TodoModel>> getAllTodos() {
+    final uid = FirebaseAuth.instance.currentUser!.uid;
     return _todosCollection
-        .orderBy('createdAt', descending: true)
+        .where('userId', isEqualTo: uid) // only this user’s todos
         .snapshots()
         .map(
           (snapshot) =>
@@ -36,7 +43,8 @@ class TodoRepository {
 
   Future<void> updateTodo(String todoId, Map<String, dynamic> updates) async {
     try {
-      await _todosCollection.doc(todoId).update(updates);
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      await _todosCollection.doc(todoId).update({...updates, 'userId': uid});
     } catch (e) {
       throw Exception('Failed to update todo: $e');
     }
@@ -44,6 +52,7 @@ class TodoRepository {
 
   Future<void> deleteTodo(String id) async {
     try {
+      FirebaseAuth.instance.currentUser!.uid;
       await _todosCollection.doc(id).delete();
     } catch (e) {
       throw Exception('Failed to delete todo: $e');
