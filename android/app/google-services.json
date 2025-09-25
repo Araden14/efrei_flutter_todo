@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "143554999350",
+    "project_id": "efrei-flutter-todo",
+    "storage_bucket": "efrei-flutter-todo.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:143554999350:android:1242e12ba322595d0fd497",
+        "android_client_info": {
+          "package_name": "com.example.flutter_todo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCxDPL3K96WUftidBf3zrsY-3OF0vUv4OQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
