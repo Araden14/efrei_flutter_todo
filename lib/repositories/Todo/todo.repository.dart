@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_todo/models/Todo/todo.model.dart';
 
-class UserRepository {
+class TodoRepository {
   final CollectionReference _todos = FirebaseFirestore.instance.collection(
     'todos',
   );
@@ -10,7 +10,7 @@ class UserRepository {
     await _todos.doc(todo.id).set(todo.toJson());
   }
 
-  Future<TodoModel?> getUser(String id) async {
+  Future<TodoModel?> getTodo(String id) async {
     final doc = await _todos.doc(id).get();
     if (!doc.exists) return null;
     return TodoModel.fromFirestore(doc);
@@ -23,7 +23,7 @@ class UserRepository {
     );
   }
 
-  Future<void> updatetodo(TodoModel todo) async {
+  Future<void> updateTodo(TodoModel todo) async {
     await _todos.doc(todo.id).update(todo.toJson());
   }
 
