@@ -11,7 +11,7 @@ Timestamp? _timestampFromDateTimeNullable(DateTime? dateTime) => dateTime != nul
 
 @JsonSerializable()
 class TodoModel {
-  final String id;
+  final String? id;
   final String title;
   @JsonKey(includeIfNull: false)
   final String? description;
@@ -29,10 +29,10 @@ class TodoModel {
   final List<String> tags;
 
   TodoModel({
-    required this.id,
+    this.id,
     required this.title,
     this.description,
-    this.userId,
+    required this.userId,
     this.dueDate,
     this.priority = 'normal',
     required this.createdAt,

@@ -1,5 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_todo/repositories/todo.repository.dart';
+import 'package:flutter_todo/repositories/Todo/todo.repository.dart';
 import '../../models/Todo/todo.model.dart';
 
 class TodoService {

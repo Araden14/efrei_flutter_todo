@@ -216,7 +216,7 @@ class _HomePageState extends State<HomePage> {
                           value: todo.status == 'done',
                           onChanged: (value) async {
                             final newStatus = value! ? 'done' : 'pending';
-                            await _todoService.updateStatus(todo.id, newStatus);
+                            await _todoService.updateStatus(todo.id ?? '', newStatus);
                           },
                         ),
                       );
