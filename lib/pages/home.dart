@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/todo/todo_service.dart';
+import '../services/todo_service.dart';
 import '../models/Todo/todo.model.dart';
 import 'dart:developer' as developer;
 
@@ -51,10 +51,10 @@ class _HomePageState extends State<HomePage> {
           id: '',  // Auto-generate
           title: _todocontroller.text,
           description: _descriptionController.text.isNotEmpty ? _descriptionController.text : null,
-          userId: null,  // Set based on auth if available
+          userId: null,
           dueDate: dueDate,
           priority: _selectedPriority,
-          createdAt: DateTime.now(),  // Will be overridden by serverTimestamp in service
+          createdAt: DateTime.now(), 
           status: 'pending',
           tags: tags,
         );
