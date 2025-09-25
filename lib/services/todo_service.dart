@@ -38,4 +38,27 @@ class TodoService {
       //popup erreur $e
     }
   }
+
+  void newTodo(TodoModel newTodo) async {
+    //validate todo
+    try {
+      await todoRepository.addTodo(newTodo);
+    } catch (e) {
+      print("Issue creating new todo item");
+    }
+  }
+
+  void changeStatus(TodoModel todoToUpdate, bool done) async {
+    try {
+      final updatedTodo = TodoModel(
+        id: todoToUpdate.id,
+        title: todoToUpdate.title,
+        description: todoToUpdate.description,
+        status: "done",
+      );
+      await todoRepository.updateTodo(updatedTodo);
+    } catch (e) {
+      print("Issue changing the todo item's status");
+    }
+  }
 }
