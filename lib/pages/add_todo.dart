@@ -5,7 +5,7 @@ import '../models/Todo/todo.model.dart';
 class AddTodoPage extends StatelessWidget {
   final TodoModel? todo;
 
-  const AddTodoPage({Key? key, this.todo}) : super(key: key);
+  const AddTodoPage({super.key, this.todo});
 
   @override
   Widget build(BuildContext context) {

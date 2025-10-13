@@ -90,7 +90,7 @@ class TodoService {
     try {
       await todoRepository.addTodo(newTodo);
     } catch (e) {
-      print("Issue creating new todo item");
+      // Handle error
     }
   }
 
@@ -106,7 +106,7 @@ class TodoService {
       );
       await todoRepository.updateTodo(updatedTodo.toString(), {'status': 'done'});
     } catch (e) {
-      print("Issue changing the todo item's status");
+      // Handle error
     }
   }
 }

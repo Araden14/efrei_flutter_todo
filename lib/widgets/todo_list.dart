@@ -9,10 +9,10 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _todoService = TodoService();
+    final todoService = TodoService();
 
     return StreamBuilder<List<TodoModel>>(
-      stream: _todoService.getTodosStream(),
+      stream: todoService.getTodosStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
@@ -57,13 +57,13 @@ class TodoList extends StatelessWidget {
                             value: todo.status == 'done',
                             onChanged: (value) async {
                               final newStatus = value! ? 'done' : 'pending';
-                              await _todoService.updateStatus(todo.id ?? '', newStatus);
+                              await todoService.updateStatus(todo.id ?? '', newStatus);
                             },
                           ),
                           PopupMenuButton<String>(
                             onSelected: (value) async {
                               if (value == 'delete') {
-                                await _todoService.deleteTodo(todo.id ?? '');
+                                await todoService.deleteTodo(todo.id ?? '');
                               } else if (value == 'edit') {
                                 Navigator.push(
                                   context,
