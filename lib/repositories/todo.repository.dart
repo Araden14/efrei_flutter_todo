@@ -62,7 +62,6 @@ class TodoRepository {
 
   Future<void> deleteTodo(String id) async {
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;  // Use for potential rules check
       await _todosCollection.doc(id).delete();
     } catch (e) {
       throw Exception('Failed to delete todo: $e');

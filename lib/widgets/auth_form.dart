@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../services/auth_service.dart';
 
 class AuthForm extends StatefulWidget {
-  const AuthForm({Key? key}) : super(key: key);
+  const AuthForm({super.key});
 
   @override
   _AuthFormState createState() => _AuthFormState();

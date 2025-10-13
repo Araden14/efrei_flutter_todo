@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:uuid/uuid.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -38,6 +38,10 @@ class _HomePageState extends State<HomePage> {
     _tagsController.dispose();
     super.dispose();
   }
+
+  Future<void> _signOut() async {
+  await FirebaseAuth.instance.signOut();
+}
 
   void _addItem() async {
     if (_todocontroller.text.isNotEmpty) {
@@ -99,12 +103,19 @@ class _HomePageState extends State<HomePage> {
             wordSpacing: 4.0,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: _signOut,
+            tooltip: 'Sign Out',
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            // Todo input field
+            // Todo input field)
             TextField(
               controller: _todocontroller,
               decoration: InputDecoration(
@@ -154,7 +165,7 @@ class _HomePageState extends State<HomePage> {
             const SizedBox(height: 16),
             // Priority dropdown
             DropdownButtonFormField<String>(
-              value: _selectedPriority,
+              initialValue: _selectedPriority,
               decoration: const InputDecoration(
                 hintText: 'Priority',
                 border: OutlineInputBorder(),
