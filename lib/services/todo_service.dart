@@ -31,7 +31,12 @@ class TodoService {
         // User not authenticated, return empty stream
         return Stream.value([]);
       }
-      return todoRepository.getAllTodos();
+      final todos = todoRepository.getAllTodos();
+      final sortedTodos = todos.map((list) {
+        list.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+        return list;
+      });
+      return sortedTodos;
     } catch (e) {
       // popup erreur $e
       return Stream.value([]);
@@ -52,6 +57,26 @@ class TodoService {
       final Map<String, dynamic> statusUpdate = {'status': status};
       return todoRepository.updateTodo(id, statusUpdate);
     } catch ($e) {
+      //popup erreur $e
+    }
+  }
+
+  // Update a todo
+  Future<void> updateTodo(TodoModel todo) async {
+    try {
+      final currentUser = _auth.currentUser;
+      if (currentUser == null) {
+        throw Exception('User not authenticated');
+      }
+      final Map<String, dynamic> updates = {
+        'title': todo.title,
+        'description': todo.description,
+        'dueDate': todo.dueDate,
+        'priority': todo.priority,
+        'tags': todo.tags,
+      };
+      return todoRepository.updateTodo(todo.id ?? '', updates);
+    } catch (e) {
       //popup erreur $e
     }
   }

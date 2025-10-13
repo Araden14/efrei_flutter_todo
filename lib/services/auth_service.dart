@@ -4,6 +4,8 @@ import 'dart:developer' as developer;
 class AuthService {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
 
+  auth.User? get currentUser => _auth.currentUser;
+
   // Register new user with email and password
   Future<auth.User?> registerUser(String email, String password) async {
     try {
