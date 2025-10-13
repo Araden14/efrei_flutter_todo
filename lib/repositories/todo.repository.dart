@@ -4,15 +4,21 @@ import 'package:flutter_todo/models/Todo/todo.model.dart';
 import 'dart:developer' as developer;
 
 class TodoRepository {
-  final CollectionReference _todosCollection = FirebaseFirestore.instance
-      .collection('todos');
+  final FirebaseFirestore firestore;
+  final FirebaseAuth firebaseAuth;
+
+  TodoRepository({FirebaseFirestore? firestore, FirebaseAuth? firebaseAuth})
+      : firestore = firestore ?? FirebaseFirestore.instance,
+        firebaseAuth = firebaseAuth ?? FirebaseAuth.instance;
+
+  CollectionReference get _todosCollection => firestore.collection('todos');
 
   Future<String> addTodo(TodoModel todo) async {
     try {
       if (todo.id == null || todo.id!.isEmpty) {
         throw ArgumentError('Todo ID must be provided (UUID from client)');
       }
-      final String uid = FirebaseAuth.instance.currentUser!.uid;
+      final String uid = firebaseAuth.currentUser!.uid;
       final data = todo.toJson();
       data['userId'] = uid;  // Ensure userId is set for queries/rules
       await _todosCollection.doc(todo.id!).set(data);  // Use custom ID with .set()
@@ -25,7 +31,7 @@ class TodoRepository {
 
   Future<TodoModel> getTodo(String id) async {
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final uid = firebaseAuth.currentUser!.uid;
       final query = await _todosCollection
           .where('userId', isEqualTo: uid)
           .where(FieldPath.documentId, isEqualTo: id)
@@ -41,7 +47,7 @@ class TodoRepository {
   }
 
   Stream<List<TodoModel>> getAllTodos() {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final uid = firebaseAuth.currentUser!.uid;
     return _todosCollection
         .where('userId', isEqualTo: uid) // only this user’s todos
         .snapshots()
@@ -53,7 +59,7 @@ class TodoRepository {
 
   Future<void> updateTodo(String todoId, Map<String, dynamic> updates) async {
     try {
-      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final uid = firebaseAuth.currentUser!.uid;
       await _todosCollection.doc(todoId).update({...updates, 'userId': uid});
     } catch (e) {
       throw Exception('Failed to update todo: $e');

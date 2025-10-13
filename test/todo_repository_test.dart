@@ -14,7 +14,7 @@ void main() {
       fakeFirestore = FakeFirebaseFirestore();
       mockAuth = MockFirebaseAuth(mockUser: MockUser(uid: 'test-user'));
       await mockAuth.signInWithEmailAndPassword(email: 'a@b.c', password: 'pw');
-      repository = TodoRepository();
+      repository = TodoRepository(firestore: fakeFirestore, firebaseAuth: mockAuth);
     });
 
     test('add and get todo', () async {
