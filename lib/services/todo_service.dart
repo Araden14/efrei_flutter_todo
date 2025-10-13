@@ -10,10 +10,6 @@ class TodoService {
   // Add a new todo
   Future<String> addNew(TodoModel todo) async {
     try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        throw Exception('User not authenticated');
-      }
       developer.log(todo.id.toString());
       final String newTodoId = await todoRepository.addTodo(todo);
       return newTodoId;
@@ -26,15 +22,10 @@ class TodoService {
   // Fetch all todos (stream for real-time updates)
   Stream<List<TodoModel>> getTodosStream() {
     try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        // User not authenticated, return empty stream
-        return Stream.value([]);
-      }
       return todoRepository.getAllTodos();
     } catch (e) {
       // popup erreur $e
-      return Stream.value([]);
+      return Stream.empty();
     }
   }
 
@@ -45,10 +36,6 @@ class TodoService {
 
   Future<void> updateStatus(String id, String status) async {
     try {
-      final currentUser = _auth.currentUser;
-      if (currentUser == null) {
-        throw Exception('User not authenticated');
-      }
       final Map<String, dynamic> statusUpdate = {'status': status};
       return todoRepository.updateTodo(id, statusUpdate);
     } catch ($e) {
