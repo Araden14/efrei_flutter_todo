@@ -6,6 +6,7 @@ import 'dart:developer' as developer;
 import 'package:flutter_todo/env/firebase_options.dart';
 import 'package:flutter_todo/pages/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_todo/pages/add_todo.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -29,7 +30,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      title: 'My App',
+      title: 'MegaTodo+',
       routerConfig: _router,
     );
   }
@@ -48,6 +49,12 @@ final GoRouter _router = GoRouter(
       path: '/auth',
       builder: (BuildContext context, GoRouterState state) {
         return const AuthPage();
+      },
+    ),
+    GoRoute(
+      path: '/add_todo',
+      builder: (BuildContext context, GoRouterState state) {
+        return const AddTodoPage();
       },
     ),
   ],
