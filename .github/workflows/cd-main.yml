@@ -1,0 +1,19 @@
+name: CD (main)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    name: Deploy placeholder
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Placeholder deploy step
+        run: |
+          echo "Deploy step would run here (server not configured yet)."
+          echo "Assumes code already validated on staging."

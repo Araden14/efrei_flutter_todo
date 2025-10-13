@@ -4,8 +4,12 @@ import '../../models/Todo/todo.model.dart';
 import 'dart:developer' as developer;
 
 class TodoService {
-  final todoRepository = TodoRepository();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TodoRepository todoRepository;
+  final FirebaseAuth _auth;
+
+  TodoService({TodoRepository? repository, FirebaseAuth? firebaseAuth})
+      : todoRepository = repository ?? TodoRepository(),
+        _auth = firebaseAuth ?? FirebaseAuth.instance;
 
   // Add a new todo
   Future<String> addNew(TodoModel todo) async {
@@ -51,7 +55,7 @@ class TodoService {
       }
       final Map<String, dynamic> statusUpdate = {'status': status};
       return todoRepository.updateTodo(id, statusUpdate);
-    } catch ($e) {
+    } catch (e) {
       //popup erreur $e
     }
   }
