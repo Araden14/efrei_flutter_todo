@@ -1,0 +1,53 @@
+name: CI (staging)
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  flutter-ci:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Flutter version
+        run: flutter --version
+
+      - name: Restore pub cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.pub-cache
+            ${{ github.workspace }}/.dart_tool
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            pub-${{ runner.os }}-
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze (lint)
+        run: flutter analyze
+
+      - name: Run tests
+        run: flutter test --no-pub --coverage
+
+      - name: Run integration tests (web)
+        run: flutter test integration_test -d chrome --no-pub
+
+      - name: Build Web
+        run: flutter build web --release --no-tree-shake-icons
+
+      - name: Upload Web build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: web-build
+          path: build/web
