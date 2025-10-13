@@ -47,7 +47,23 @@ class TodoList extends StatelessWidget {
                             'Priority: ${todo.priority} | Status: ${todo.status}',
                           ),
                           if (todo.tags.isNotEmpty)
-                            Text('Tags: ${todo.tags.join(', ')}'),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Wrap(
+                                spacing: 8.0,
+                                runSpacing: 4.0,
+                                children: todo.tags.map((tag) {
+                                  return Chip(
+                                    label: Text(
+                                      tag,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                         ],
                       ),
                       trailing: Row(
