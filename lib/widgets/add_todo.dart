@@ -11,10 +11,10 @@ class TodoInput extends StatefulWidget {
   const TodoInput({super.key, this.todo});
 
   @override
-  _TodoInputState createState() => _TodoInputState();
+  TodoInputState createState() => TodoInputState();
 }
 
-class _TodoInputState extends State<TodoInput> {
+class TodoInputState extends State<TodoInput> {
   final AuthService _auth = AuthService();
   final TodoService _todoService = TodoService();
   late TextEditingController _todocontroller;
@@ -175,7 +175,7 @@ class _TodoInputState extends State<TodoInput> {
         const SizedBox(height: 16),
         // Priority dropdown
         DropdownButtonFormField<String>(
-          value: _selectedPriority,
+          initialValue: _selectedPriority,
           decoration: const InputDecoration(
             hintText: 'Priority',
             border: OutlineInputBorder(),

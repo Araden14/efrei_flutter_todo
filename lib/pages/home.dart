@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
-import 'dart:developer' as developer;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/todo_list.dart';
-import '../widgets/add_todo.dart';
-import 'package:flutter_todo/widgets/add_todo.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
-
+  
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
-  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<void> _signOut() async {
   await FirebaseAuth.instance.signOut();
@@ -67,3 +63,4 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+

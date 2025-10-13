@@ -9,10 +9,10 @@ class TodoList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _todoService = TodoService();
+    final todoService = TodoService();
 
     return StreamBuilder<List<TodoModel>>(
-      stream: _todoService.getTodosStream(),
+      stream: todoService.getTodosStream(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return Center(child: Text('Error: ${snapshot.error}'));
@@ -47,7 +47,23 @@ class TodoList extends StatelessWidget {
                             'Priority: ${todo.priority} | Status: ${todo.status}',
                           ),
                           if (todo.tags.isNotEmpty)
-                            Text('Tags: ${todo.tags.join(', ')}'),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Wrap(
+                                spacing: 8.0,
+                                runSpacing: 4.0,
+                                children: todo.tags.map((tag) {
+                                  return Chip(
+                                    label: Text(
+                                      tag,
+                                      style: const TextStyle(fontSize: 12),
+                                    ),
+                                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                                    padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 0),
+                                  );
+                                }).toList(),
+                              ),
+                            ),
                         ],
                       ),
                       trailing: Row(
@@ -57,13 +73,13 @@ class TodoList extends StatelessWidget {
                             value: todo.status == 'done',
                             onChanged: (value) async {
                               final newStatus = value! ? 'done' : 'pending';
-                              await _todoService.updateStatus(todo.id ?? '', newStatus);
+                              await todoService.updateStatus(todo.id ?? '', newStatus);
                             },
                           ),
                           PopupMenuButton<String>(
                             onSelected: (value) async {
                               if (value == 'delete') {
-                                await _todoService.deleteTodo(todo.id ?? '');
+                                await todoService.deleteTodo(todo.id ?? '');
                               } else if (value == 'edit') {
                                 Navigator.push(
                                   context,
