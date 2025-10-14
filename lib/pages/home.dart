@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:go_router/go_router.dart';
 import '../widgets/todo_list.dart';
+import '../services/todo_service.dart';
+import '../models/Todo/todo.model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -11,6 +13,9 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final todoService = TodoService();
+  late final Stream<List<TodoModel>> _todos$ = todoService.getTodosStream();
+
 
   Future<void> _signOut() async {
   await FirebaseAuth.instance.signOut();
@@ -55,8 +60,27 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Expanded(
-              child: const TodoList(),
-            ),
+              child: StreamBuilder<List<TodoModel>>(
+                stream: _todos$,
+                builder: (BuildContext context, AsyncSnapshot<List<TodoModel>> snapshot) {
+                  // snapshot = current state of the stream
+                  if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+
+                if (!snapshot.hasData) {
+                  return const Text('No data yet');
+                }
+                final data = snapshot.data!;
+                return TodoList(data);
+
+              },
+              ),
+            )
           ],
         ),
       ),
