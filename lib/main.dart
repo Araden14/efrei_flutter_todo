@@ -4,7 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:flutter_todo/pages/home.dart';
 import 'dart:developer' as developer;
 import 'package:flutter_todo/env/firebase_options.dart';
-import 'package:flutter_todo/pages/auth.dart';
+import 'package:flutter_todo/pages/login.dart';
+import 'package:flutter_todo/pages/signup.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_todo/pages/add_todo.dart';
 
@@ -46,9 +47,15 @@ final GoRouter _router = GoRouter(
       },
     ),
     GoRoute(
-      path: '/auth',
+      path: '/login',
       builder: (BuildContext context, GoRouterState state) {
-        return const AuthPage();
+        return const LoginPage();
+      },
+    ),
+    GoRoute(
+      path: '/signup',
+      builder: (BuildContext context, GoRouterState state) {
+        return const SignUpPage();
       },
     ),
     GoRoute(
@@ -83,9 +90,9 @@ class AuthGuard extends StatelessWidget {
           // User is authenticated, show the protected page
           return child;
         } else {
-          // User is not authenticated, redirect to auth
+          // User is not authenticated, redirect to login
           WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.go('/auth');
+            context.go('/login');
           });
           return const Scaffold(
             body: Center(
