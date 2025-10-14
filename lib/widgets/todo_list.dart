@@ -5,26 +5,17 @@ import '../services/todo_service.dart';
 import '../pages/add_todo.dart';
 
 class TodoList extends StatelessWidget {
-  const TodoList({super.key});
+  const TodoList(this.todos, {super.key});
+  final List<TodoModel> todos;
 
   @override
   Widget build(BuildContext context) {
-    final todoService = TodoService();
-
-    return StreamBuilder<List<TodoModel>>(
-      stream: todoService.getTodosStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        final todos = snapshot.data!;
+      final todoService = TodoService();
+      
         return AnimationLimiter(
           child: Padding(
             padding: const EdgeInsets.all(16.0),
-            child: GridView.builder(
+              child: GridView.builder(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 3,
                 crossAxisSpacing: 16.0,
@@ -60,10 +51,8 @@ class TodoList extends StatelessWidget {
               },
             ),
           ),
-        );
-      },
-    );
-  }
+        );  
+      }
 }
 
 class _StickyNoteCard extends StatelessWidget {
